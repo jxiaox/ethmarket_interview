@@ -1,27 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <title>Order List</title>
-  </head>
+    <style>
+        section {
+            display: block;
+        }
 
-  <body>
-    <h1>Order List</h1>
+        .new-order {
+            width: 50%;
+            float: left;
+        }
 
-    <table id="order-list">
-      <tr> <th>Number</th> <th>Side</th> <th>Quantity</th> <th>Price</th> </tr>
-      <tbody>
-        <tr v-for="order in orders">
-          <td>{{ order.number }}</td>
-          <td>{{ order.side }}</td>
-          <td>{{ order.quantity }}</td>
-          <td>{{ order.price }}</td>
-        </tr>
-      </tbody>
-    </table>
+        .item {
+            box-sizing: border-box;
+            background-color: #eee;
+            border: 1px solid black;
+            display: inline-block;
+        }
+
+        .item-transition {
+            transition: all .3s ease;
+            height: 30px;
+            padding: 10px;
+            background-color: #eee;
+            overflow: hidden;
+        }
+
+        .item-enter {
+            background-color: red;
+            height: 0;
+            padding: 0 10px;
+            opacity: 0;
+        }
+
+        .item-leave {
+            height: 0;
+            padding: 0 10px;
+            opacity: 0;
+            position: absolute; /* important for removal move to work */
+        }
+
+        .item-move {
+
+            transition: transform .5s cubic-bezier(.55, 0, .1, 1); /* applied when moving */
+        }
+
+
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <section class="new-order">
+        <h1> Bid Order List</h1>
+        <table>
+            <tr>
+                <th>Number</th>
+                <th>Side</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            <tbody>
+            <!-- | orderBy 'price' 'number' -->
+            <tr v-for="order in newBidOrders " transition="item">
+                <td>{{ order.number }}</td>
+                <td>{{ order.side }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.price }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="new-order">
+        <h1> Ask Order List</h1>
+        <table>
+            <tr>
+                <th>Number</th>
+                <th>Side</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            <tbody>
+            <!-- | orderBy 'price' 'number' -->
+            <tr v-for="order in newAskOrders " transition="item">
+                <td>{{ order.number }}</td>
+                <td>{{ order.side }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.price }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <section style="float:left;width:100%;">
+        <h1> Deal Order List</h1>
+        <table id="order-list" style="width:100%;">
+            <tr>
+                <th>time</th>
+                <th>price</th>
+                <th>Quantity</th>
+                <th>Detail</th>
+            </tr>
+            <tbody>
+            <!-- | orderBy 'price' 'number' -->
+            <tr v-for="order in dealOrders " transition="item" @click="toggleDealOrder(order)">
+                <td>{{ order.time }}</td>
+                <td>{{ order.price }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>
+                    <table v-if="order.show">
+                        <tr>
+                            <th>type</th>
+                            <th>Number</th>
+                            <th>Side</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                        <tbody>
+                        <tr>
+                            <td>{{ 'Ask' }}</td>
+                            <td>{{ order.askOrder.number }}</td>
+                            <td>{{ order.askOrder.side }}</td>
+                            <td>{{ order.askOrder.quantity }}</td>
+                            <td>{{ order.askOrder.price }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Bid' }}</td>
+                            <td>{{ order.bidOrder.number }}</td>
+                            <td>{{ order.bidOrder.side }}</td>
+                            <td>{{ order.bidOrder.quantity }}</td>
+                            <td>{{ order.bidOrder.price }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </section>
 
     <!--------------------------------- Scripts ------------------------------------------>
     <script src="js/jquery.min.js"></script>
-    <script src="js/vue.min.js"></script>
+     <script src="js/vue.min.js"></script>
+    <script src="js/vue-animated-list.js"></script>
     <script src="orders.js"></script>
-  </body>
+
+</body>
 </html>
